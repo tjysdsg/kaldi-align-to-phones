@@ -10,6 +10,8 @@ oov='<UNK>'
 ivector_period=
 ivector_scp=
 feats_scp=
+beam=10
+retry_beam=40
 
 stage=0
 
@@ -29,7 +31,13 @@ fi
 
 if [ $stage -le 10 ]; then
     echo "Stage 10: Performing force alignment"
-    nnet3-align-compiled $ivector_opts $mdl ark:exp/graphs.fst scp:feats.scp ark:exp/1.ali || exit 1
+    nnet3-align-compiled $ivector_opts \
+        --beam=$beam \
+        --retry-beam=$retry_beam \
+        $mdl \
+        ark:exp/graphs.fst \
+        scp:feats.scp ark:exp/1.ali \
+        || exit 1
 fi
 
 if [ $stage -le 20 ]; then
