@@ -7,19 +7,22 @@ tree=$root/exp/nnet3_cleaned/tdnn_sp/tree
 lexfst=$root/data/lang_nosp/L.fst
 words=words.txt
 phones=phones.txt
-text=text
 oov='<UNK>'
 ivector_period=10
-ivector_scp=ivector_online.scp
-feats_scp=feats.scp
+
+text=exp/text
+ivector_scp=exp/ivector_online.scp
+feats_scp=exp/feats.scp
+
 stage=0
 
 . ./cmd.sh
 . ./path.sh
 . parse_options.sh
 
-cat ivector_${data}_clean.scp ivector_${data}_other.scp > ivector_online.scp
-cat feats_${data}_clean.scp feats_${data}_other.scp > feats.scp || exit 1
+cat ivector_${data}_clean.scp ivector_${data}_other.scp > $ivector_scp
+cat feats_${data}_clean.scp feats_${data}_other.scp > $feats_scp
+cat text_${data}_clean text_${data}_other > $text
 
 ./nnet3-align-to-phones.sh --stage $stage \
     --mdl $mdl \
@@ -27,8 +30,8 @@ cat feats_${data}_clean.scp feats_${data}_other.scp > feats.scp || exit 1
     --lexfst $lexfst \
     --phones $phones \
     --words $words \
-    --text $text \
     --oov $oov \
-    --feats_scp $feats_scp \
     --ivector-period $ivector_period \
+    --text $text \
+    --feats_scp $feats_scp \
     --ivector_scp $ivector_scp

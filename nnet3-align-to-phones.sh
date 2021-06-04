@@ -36,7 +36,7 @@ if [ $stage -le 10 ]; then
         --retry-beam=$retry_beam \
         $mdl \
         ark:exp/graphs.fst \
-        scp:feats.scp ark:exp/1.ali \
+        scp:$feats_scp ark:exp/1.ali \
         || exit 1
 fi
 
