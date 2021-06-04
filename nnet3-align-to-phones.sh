@@ -34,9 +34,9 @@ fi
 
 if [ $stage -le 20 ]; then
     echo "Stage 20: Generating phone transcripts"
-    ali-to-phones $mdl ark:exp/1.ali ark,t:exp/text.int
-    utils/int2sym.pl -f 2- $phones exp/text.int > exp/trans.phn
+    ali-to-phones $mdl ark:exp/1.ali ark,t:exp/trans.int
+    utils/int2sym.pl -f 2- $phones exp/trans.int > exp/trans.txt
     
-    python clean-phones.py exp/trans.phn exp/trans_cleaned.phn
-    echo "Find phone transcripts at exp/trans_cleaned.phn"
+    python clean-phones.py exp/trans.txt exp/trans_cleaned.txt
+    echo "Find phone transcripts at exp/trans_cleaned.txt"
 fi
