@@ -28,9 +28,9 @@ if [ "$subset" = "train" ]; then
   cat feats_train_960.scp > $feats_scp
   cat text_train_960 > $text
 else
-  cat ivector_${data}_clean.scp ivector_${data}_other.scp > $ivector_scp
-  cat feats_${data}_clean.scp feats_${data}_other.scp > $feats_scp
-  cat text_${data}_clean text_${data}_other > $text
+  cat ivector_${subset}_clean.scp ivector_${subset}_other.scp > $ivector_scp
+  cat feats_${subset}_clean.scp feats_${subset}_other.scp > $feats_scp
+  cat text_${subset}_clean text_${subset}_other > $text
 fi
 
 if [ $stage -le 1 ]; then
