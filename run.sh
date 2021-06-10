@@ -1,12 +1,14 @@
 set -e
 
-data=test
+subset=train  # train test dev
 root=/home/storage07/zhangjunbo/src/kaldi/egs/librispeech/s5
 mdl=$root/exp/nnet3_cleaned/tdnn_sp/final.mdl
 tree=$root/exp/nnet3_cleaned/tdnn_sp/tree
-lexfst=$root/data/lang_nosp/L.fst
-words=words.txt
-phones=phones.txt
+
+lang=data/lang_nosp
+lexfst=$lang/L.fst
+words=$lang/words.txt
+phones=$lang/phones.txt
 oov='<UNK>'
 ivector_period=10
 
@@ -20,18 +22,30 @@ stage=0
 . ./path.sh
 . parse_options.sh
 
-cat ivector_${data}_clean.scp ivector_${data}_other.scp > $ivector_scp
-cat feats_${data}_clean.scp feats_${data}_other.scp > $feats_scp
-cat text_${data}_clean text_${data}_other > $text
+if [ "$subset" = "train" ]; then
+  cat ivector_train_960.scp > $ivector_scp
+  cat feats_train_960.scp > $feats_scp
+  cat text_train_960 > $text
+else
+  cat ivector_${data}_clean.scp ivector_${data}_other.scp > $ivector_scp
+  cat feats_${data}_clean.scp feats_${data}_other.scp > $feats_scp
+  cat text_${data}_clean text_${data}_other > $text
+fi
 
-./nnet3-align-to-phones.sh --stage $stage \
-    --mdl $mdl \
-    --tree $tree \
-    --lexfst $lexfst \
-    --phones $phones \
-    --words $words \
-    --oov $oov \
-    --ivector-period $ivector_period \
-    --text $text \
-    --feats_scp $feats_scp \
-    --ivector_scp $ivector_scp
+if [ $stage -le 1 ]; then
+  ./prepare-fst.sh
+fi
+
+if [ $stage -le 2 ]; then
+  ./nnet3-align-to-phones.sh --stage $stage \
+      --mdl $mdl \
+      --tree $tree \
+      --lexfst $lexfst \
+      --phones $phones \
+      --words $words \
+      --oov $oov \
+      --ivector-period $ivector_period \
+      --text $text \
+      --feats_scp $feats_scp \
+      --ivector_scp $ivector_scp
+fi
