@@ -1,9 +1,8 @@
 set -e
 
 subset=train  # train test dev
-root=/home/storage07/zhangjunbo/src/kaldi/egs/librispeech/s5
-mdl=$root/exp/nnet3_cleaned/tdnn_sp/final.mdl
-tree=$root/exp/nnet3_cleaned/tdnn_sp/tree
+mdl=final.mdl
+tree=tree
 
 lang=data/lang_nosp
 lexfst=$lang/L.fst
@@ -22,6 +21,8 @@ stage=0
 . ./path.sh
 . parse_options.sh
 
+mkdir -p exp
+
 if [ "$subset" = "train" ]; then
   cat ivector_train_960.scp > $ivector_scp
   cat feats_train_960.scp > $feats_scp
@@ -37,7 +38,7 @@ if [ $stage -le 1 ]; then
 fi
 
 if [ $stage -le 2 ]; then
-  ./nnet3-align-to-phones.sh --stage $stage \
+  ./nnet3-align-to-phones.sh --stage 0 \
       --mdl $mdl \
       --tree $tree \
       --lexfst $lexfst \
